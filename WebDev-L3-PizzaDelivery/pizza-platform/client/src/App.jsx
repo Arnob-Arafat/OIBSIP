@@ -1,122 +1,184 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+
+import { useState } from "react";
+
+import Navbar from "./components/Navbar";
+import PizzaCard from "./components/PizzaCard";
+import pizzas from "./data/pizza.js";
+
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
+  const [selectedPizza, setSelectedPizza] = useState(null);
+
+  const categories = [
+    "All",
+    "Classic",
+    "Vegetarian",
+    "Special",
+  ];
+
+  const filteredPizzas = pizzas.filter((pizza) => {
+    const matchesSearch =
+      pizza.name.toLowerCase().includes(search.toLowerCase());
+
+    const matchesCategory =
+      category === "All" || pizza.category === category;
+
+    return matchesSearch && matchesCategory;
+  });
+
+  function handleCustomize(pizza) {
+    setSelectedPizza(pizza);
+  }
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      <Navbar />
 
-      <div className="ticks"></div>
+      <main>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        {/* Hero Section */}
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+        <section className="hero">
+
+          <div className="hero-content">
+            <span className="hero-tag">
+              YOUR PIZZA DESTINATION
+            </span>
+
+            <h1>
+              Good food.
+              <br />
+              <span>Good mood.</span>
+            </h1>
+
+            <p>
+              Discover your favourite pizzas or create
+              something completely your own.
+            </p>
+
+            <a href="#menu" className="hero-btn">
+              Explore menu →
+            </a>
+          </div>
+
+          <div className="hero-image">
+            <span>🍕</span>
+            <p>Replace with hero image</p>
+          </div>
+
+        </section>
+
+
+        {/* Menu Section */}
+
+        <section className="menu-section" id="menu">
+
+          <div className="section-heading">
+            <div>
+              <span className="section-label">
+                OUR MENU
+              </span>
+
+              <h2>Explore our pizzas</h2>
+
+              <p>Find your next favourite slice.</p>
+            </div>
+          </div>
+
+
+          {/* Search */}
+
+          <div className="search-container">
+            <span>🔍</span>
+
+            <input
+              type="text"
+              placeholder="Search for your favourite pizza..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+
+          {/* Category Filters */}
+
+          <div className="category-filters">
+            {categories.map((item) => (
+              <button
+                key={item}
+                className={
+                  category === item
+                    ? "category-btn active"
+                    : "category-btn"
+                }
+                onClick={() => setCategory(item)}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+
+
+          {/* Pizza Grid */}
+
+          <div className="pizza-grid">
+
+            {filteredPizzas.length > 0 ? (
+              filteredPizzas.map((pizza) => (
+                <PizzaCard
+                  key={pizza.id}
+                  pizza={pizza}
+                  onCustomize={handleCustomize}
+                />
+              ))
+            ) : (
+              <p className="empty-message">
+                No pizzas found. Try another search.
+              </p>
+            )}
+
+          </div>
+
+        </section>
+
+
+        {/* Customization Selection Feedback */}
+
+        {selectedPizza && (
+          <div className="selection-message">
+            <div>
+              <strong>{selectedPizza.name}</strong>
+              <p>
+                Selected! Your custom pizza builder
+                will be connected here.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setSelectedPizza(null)}
+              aria-label="Dismiss selection"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
+      </main>
+
+
+      {/* Footer */}
+
+      <footer className="footer" id="contact">
+        <h3>YOUR BRAND</h3>
+        <p>Good pizza. Great moments.</p>
+        <span>© 2026 Your Brand. All rights reserved.</span>
+      </footer>
+
     </>
-  )
+  );
 }
 
-export default App
+export default App;
