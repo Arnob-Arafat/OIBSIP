@@ -5,7 +5,7 @@ const pizzas = [
     description: "Classic pizza with mozzarella and tomato sauce.",
     price: 450,
     category: "Classic",
-    image: ""
+    image: "/images/margerita.jpg"
   },
   {
     id: 2,
@@ -13,7 +13,7 @@ const pizzas = [
     description: "Loaded with pepperoni and mozzarella.",
     price: 550,
     category: "Classic",
-    image: ""
+    image: "/images/peperoni.jpg"
   }
 ];
 

@@ -1,10 +1,7 @@
-
-import { useState } from "react";
-
+import { useState, useMemo } from "react";
 import Navbar from "./components/Navbar";
 import PizzaCard from "./components/PizzaCard";
 import pizzas from "./data/pizza.js";
-
 import "./App.css";
 
 function App() {
@@ -12,172 +9,150 @@ function App() {
   const [category, setCategory] = useState("All");
   const [selectedPizza, setSelectedPizza] = useState(null);
 
-  const categories = [
-    "All",
-    "Classic",
-    "Vegetarian",
-    "Special",
-  ];
+  const categories = ["All", "Classic", "Vegetarian", "Special"];
 
-  const filteredPizzas = pizzas.filter((pizza) => {
-    const matchesSearch =
-      pizza.name.toLowerCase().includes(search.toLowerCase());
-
-    const matchesCategory =
-      category === "All" || pizza.category === category;
-
-    return matchesSearch && matchesCategory;
-  });
-
-  function handleCustomize(pizza) {
-    setSelectedPizza(pizza);
-  }
+  // Memoize filtered results for better rendering performance
+  const filteredPizzas = useMemo(() => {
+    return pizzas.filter((pizza) => {
+      const matchesSearch = pizza.name
+        .toLowerCase()
+        .includes(search.toLowerCase().trim());
+      const matchesCategory =
+        category === "All" || pizza.category === category;
+      return matchesSearch && matchesCategory;
+    });
+  }, [search, category]);
 
   return (
-    <>
+    <div className="app-container">
       <Navbar />
 
       <main>
-
         {/* Hero Section */}
-
         <section className="hero">
-
           <div className="hero-content">
-            <span className="hero-tag">
-              YOUR PIZZA DESTINATION
-            </span>
-
+            <span className="hero-tag">YOUR PIZZA DESTINATION</span>
             <h1>
               Good food.
               <br />
               <span>Good mood.</span>
             </h1>
-
             <p>
-              Discover your favourite pizzas or create
-              something completely your own.
+              Discover your favourite pizzas or create something completely your
+              own.
             </p>
-
             <a href="#menu" className="hero-btn">
               Explore menu →
             </a>
           </div>
 
-          <div className="hero-image">
+          <div className="hero-image" aria-hidden="true">
             <span>🍕</span>
-            <p>Replace with hero image</p>
+            <p>Delicious Pizzas</p>
           </div>
-
         </section>
 
-
         {/* Menu Section */}
-
         <section className="menu-section" id="menu">
-
           <div className="section-heading">
             <div>
-              <span className="section-label">
-                OUR MENU
-              </span>
-
+              <span className="section-label">OUR MENU</span>
               <h2>Explore our pizzas</h2>
-
               <p>Find your next favourite slice.</p>
             </div>
           </div>
 
+          <div className="menu-controls">
+            {/* Search */}
+            <div className="search-container" role="search">
+              <span aria-hidden="true">🔍</span>
+              <input
+                type="text"
+                placeholder="Search for your favourite pizza..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                aria-label="Search pizzas"
+              />
+              {search && (
+                <button
+                  type="button"
+                  className="clear-search-btn"
+                  onClick={() => setSearch("")}
+                  aria-label="Clear search"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
 
-          {/* Search */}
-
-          <div className="search-container">
-            <span>🔍</span>
-
-            <input
-              type="text"
-              placeholder="Search for your favourite pizza..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            {/* Category Filters */}
+            <div className="category-filters" role="tablist">
+              {categories.map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  role="tab"
+                  aria-selected={category === item}
+                  className={`category-btn ${category === item ? "active" : ""}`}
+                  onClick={() => setCategory(item)}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
           </div>
-
-
-          {/* Category Filters */}
-
-          <div className="category-filters">
-            {categories.map((item) => (
-              <button
-                key={item}
-                className={
-                  category === item
-                    ? "category-btn active"
-                    : "category-btn"
-                }
-                onClick={() => setCategory(item)}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-
 
           {/* Pizza Grid */}
-
           <div className="pizza-grid">
-
             {filteredPizzas.length > 0 ? (
               filteredPizzas.map((pizza) => (
                 <PizzaCard
                   key={pizza.id}
                   pizza={pizza}
-                  onCustomize={handleCustomize}
+                  onCustomize={setSelectedPizza}
                 />
               ))
             ) : (
-              <p className="empty-message">
-                No pizzas found. Try another search.
-              </p>
+              <div className="empty-state">
+                <span className="empty-icon">🍽️</span>
+                <h3>No pizzas found</h3>
+                <p className="empty-message">
+                  We couldn't find any pizzas matching "{search}". Try searching
+                  for something else or switch categories.
+                </p>
+              </div>
             )}
-
           </div>
-
         </section>
 
-
-        {/* Customization Selection Feedback */}
-
+        {/* Customization Selection Feedback Modal / Banner */}
         {selectedPizza && (
-          <div className="selection-message">
-            <div>
-              <strong>{selectedPizza.name}</strong>
-              <p>
-                Selected! Your custom pizza builder
-                will be connected here.
-              </p>
+          <aside className="selection-message" role="alert">
+            <div className="selection-info">
+              <strong>{selectedPizza.name} selected!</strong>
+              <p>Your custom pizza builder will be connected here.</p>
             </div>
-
             <button
+              type="button"
               onClick={() => setSelectedPizza(null)}
               aria-label="Dismiss selection"
+              className="close-banner-btn"
             >
               ✕
             </button>
-          </div>
+          </aside>
         )}
-
       </main>
 
-
       {/* Footer */}
-
       <footer className="footer" id="contact">
-        <h3>YOUR BRAND</h3>
-        <p>Good pizza. Great moments.</p>
-        <span>© 2026 Your Brand. All rights reserved.</span>
+        <div className="footer-content">
+          <h3>PizzAche</h3>
+          <p>Good pizza. Great moments.</p>
+          <span>© 2026 PizzAche. All rights reserved.</span>
+        </div>
       </footer>
-
-    </>
+    </div>
   );
 }
 
