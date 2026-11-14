@@ -1,7 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import PizzaCard from "./components/PizzaCard";
-import pizzas from "./data/pizza.js";
 import CustomPizzaBuilder from "./components/CustomPizzaBuilder";
 import Cart from "./components/Cart";
 import Checkout from "./components/Checkout.jsx";
@@ -41,6 +40,32 @@ function App() {
   const categories = ["All", "Classic", "Vegetarian", "Special"];
   const [showCart, setShowCart] = useState(false);
 
+  const [pizzas, setPizzas] = useState([]);
+
+  useEffect(() => {
+  const fetchPizzas = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/pizzas");
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch pizzas");
+      }
+
+      const result = await response.json();
+
+      setPizzas(result.data);
+      console.log("Fetched pizzas:", result.data);
+    } catch (error) {
+      console.error("Error fetching pizzas:", error);
+    }
+  };
+
+  fetchPizzas();
+}, []);
+
+useEffect(() => {
+  console.log("Pizzas state changed:", pizzas);
+}, [pizzas]);
   // Auto-advance hero carousel every 4 seconds
   useEffect(() => {
     if (!pizzas || pizzas.length === 0) return;
@@ -62,8 +87,11 @@ function App() {
         category === "All" || pizza.category === category;
       return matchesSearch && matchesCategory;
     });
-  }, [search, category]);
+  }, [pizzas, search, category]);
 
+  console.log("Selected category:", category);
+  console.log("Search:", search);
+  console.log("Pizza categories:", pizzas.map(pizza => pizza.category));
 
   // Add a predefined pizza
 function addRegularPizza(pizza) {
@@ -329,7 +357,7 @@ const cartCount = cartItems.reduce(
           }}
         />
       )}
-      
+
       {/* Footer */}
       <footer className="footer" id="contact">
         <div className="footer-content">
