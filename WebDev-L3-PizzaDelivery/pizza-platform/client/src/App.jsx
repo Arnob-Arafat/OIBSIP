@@ -4,7 +4,30 @@ import PizzaCard from "./components/PizzaCard";
 import pizzas from "./data/pizza.js";
 import CustomPizzaBuilder from "./components/CustomPizzaBuilder";
 import Cart from "./components/Cart";
+import Checkout from "./components/Checkout.jsx";
+
 import "./App.css";
+
+function OrderConfirmation({ order, onContinue }) {
+  return (
+    <div className="order-confirmation">
+      <h1>Thank you for your order!</h1>
+      <p>Your order has been placed successfully.</p>
+
+      <h3>Delivery Details</h3>
+      <p>{order.customer.name}</p>
+      <p>{order.customer.phone}</p>
+      <p>{order.customer.address}, {order.customer.city}</p>
+
+      <h3>Order Total</h3>
+      <h2>৳{order.total.toFixed(2)}</h2>
+
+      <button onClick={onContinue}>
+        Continue Shopping
+      </button>
+    </div>
+  );
+}
 
 function App() {
   const [search, setSearch] = useState("");
@@ -12,6 +35,8 @@ function App() {
   const [showBuilder, setShowBuilder] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [orderConfirmation, setOrderConfirmation] = useState(null);
 
   const categories = ["All", "Classic", "Vegetarian", "Special"];
   const [showCart, setShowCart] = useState(false);
@@ -119,6 +144,30 @@ const cartCount = cartItems.reduce(
   0
 );
 
+  if (orderConfirmation) {
+    return (
+      <OrderConfirmation
+        order={orderConfirmation}
+        onContinue={() => setOrderConfirmation(null)}
+      />
+    );
+  }
+
+  if (showCheckout) {
+    return (
+      <Checkout
+        items={cartItems}
+        onBack={() => setShowCheckout(false)}
+        onPlaceOrder={(order) => {
+          setOrderConfirmation(order);
+          setCartItems([]);
+          setShowCheckout(false);
+        }}
+      />
+    );
+  }
+
+// Your existing main application JSX goes here.
   return (
     <div className="app-container">
       <Navbar
@@ -274,8 +323,13 @@ const cartCount = cartItems.reduce(
           onUpdateQuantity={updateCartQuantity}
           onRemove={removeCartItem}
           onClose={() => setShowCart(false)}
+          onCheckout={() => {
+            setShowCart(false);
+            setShowCheckout(true);
+          }}
         />
       )}
+      
       {/* Footer */}
       <footer className="footer" id="contact">
         <div className="footer-content">

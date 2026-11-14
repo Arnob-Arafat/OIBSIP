@@ -1,7 +1,7 @@
 
 import "./Cart.css";
 
-function Cart({ items, onUpdateQuantity, onRemove, onClose }) {
+function Cart({ items, onUpdateQuantity, onRemove, onClose, onCheckout }) {
   const subtotal = items.reduce(
     (total, item) => total + item.unitPrice * item.quantity,
     0
@@ -116,11 +116,11 @@ function Cart({ items, onUpdateQuantity, onRemove, onClose }) {
               <button
                 type="button"
                 className="checkout-btn"
-                disabled
-                title="Checkout will be implemented in a later step"
-              >
-                Checkout — Coming soon
-              </button>
+                disabled={items.length === 0}
+                onClick={onCheckout}
+                >
+                Proceed to Checkout
+            </button>
 
               <p>Delivery charges and taxes will be calculated at checkout.</p>
             </div>

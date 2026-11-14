@@ -662,3 +662,33 @@ a {
     justify-content: space-between;
   }
 }
+
+.order-confirmation {
+  max-width: 600px;
+  margin: 80px auto;
+  padding: 40px;
+  text-align: center;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+}
+
+.order-confirmation h1 {
+  color: #d70f64;
+  margin-bottom: 15px;
+}
+
+.order-confirmation p {
+  margin: 10px 0;
+  color: #555;
+}
+
+.order-confirmation button {
+  margin-top: 25px;
+  padding: 13px 25px;
+  border: none;
+  border-radius: 8px;
+  background: #d70f64;
+  color: white;
+  cursor: pointer;
+}
