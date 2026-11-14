@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import PizzaCard from "./components/PizzaCard";
 import pizzas from "./data/pizza.js";
 import CustomPizzaBuilder from "./components/CustomPizzaBuilder";
+import Cart from "./components/Cart";
 import "./App.css";
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const categories = ["All", "Classic", "Vegetarian", "Special"];
+  const [showCart, setShowCart] = useState(false);
 
   // Auto-advance hero carousel every 4 seconds
   useEffect(() => {
@@ -37,9 +39,76 @@ function App() {
     });
   }, [search, category]);
 
+
+  // Add a predefined pizza
+function addRegularPizza(pizza) {
+  const cartItem = {
+    cartItemId: `${pizza.id}-${Date.now()}`,
+    type: "regular",
+    name: pizza.name,
+    unitPrice: Number(pizza.price),
+    quantity: 1,
+  };
+
+  setCartItems((previous) => [...previous, cartItem]);
+
+  setShowCart(true); // Automatically open cart
+}
+
+// Add a custom pizza
+function addCustomPizza(pizza) {
+  const cartItem = {
+    cartItemId: pizza.id,
+    type: "custom",
+    name: pizza.name,
+    base: pizza.base,
+    sauce: pizza.sauce,
+    cheese: pizza.cheese,
+    vegetables: pizza.vegetables,
+    unitPrice: pizza.unitPrice,
+    quantity: pizza.quantity,
+  };
+
+  setCartItems((previous) => [...previous, cartItem]);
+  setShowBuilder(false);
+  setShowCart(true);
+}
+
+// Update quantity
+function updateCartQuantity(cartItemId, newQuantity) {
+  if (newQuantity <= 0) {
+    removeCartItem(cartItemId);
+    return;
+  }
+
+  setCartItems((previous) =>
+    previous.map((item) =>
+      item.cartItemId === cartItemId
+        ? { ...item, quantity: newQuantity }
+        : item
+    )
+  );
+}
+
+// Remove an item
+function removeCartItem(cartItemId) {
+  setCartItems((previous) =>
+    previous.filter((item) => item.cartItemId !== cartItemId)
+  );
+}
+
+// Total number of pizzas in cart
+const cartCount = cartItems.reduce(
+  (total, item) => total + item.quantity,
+  0
+);
+
   return (
     <div className="app-container">
-      <Navbar cartCount={cartItems.length} />
+      <Navbar
+        cartCount={cartCount}
+        onCartClick={() => setShowCart(true)}
+      />
 
       <main>
         {/* Hero Section */}
@@ -106,9 +175,7 @@ function App() {
         {showBuilder && (
           <CustomPizzaBuilder
             onClose={() => setShowBuilder(false)}
-            onAddToCart={(pizza) => {
-              setCartItems((previous) => [...previous, pizza]);
-            }}
+            onAddToCart={addCustomPizza}
           />
         )}
         {/* Menu Section */}
@@ -167,6 +234,7 @@ function App() {
                 <PizzaCard
                   key={pizza.id}
                   pizza={pizza}
+                  onAddToCart={addRegularPizza}
                 />
               ))
             ) : (
@@ -184,6 +252,14 @@ function App() {
 
       </main>
 
+      {showCart && (
+        <Cart
+          items={cartItems}
+          onUpdateQuantity={updateCartQuantity}
+          onRemove={removeCartItem}
+          onClose={() => setShowCart(false)}
+        />
+      )}
       {/* Footer */}
       <footer className="footer" id="contact">
         <div className="footer-content">

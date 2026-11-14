@@ -1,4 +1,4 @@
-function PizzaCard({ pizza }) {
+function PizzaCard({ pizza, onAddToCart }) {
   return (
     <article className="pizza-card">
       <div className="pizza-image">
@@ -22,6 +22,14 @@ function PizzaCard({ pizza }) {
             <span>Starting from</span>
             <strong>৳{pizza.price}</strong>
           </div>
+
+          <button
+            type="button"
+            className="customize-btn"
+            onClick={() => onAddToCart(pizza)}
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
     </article>

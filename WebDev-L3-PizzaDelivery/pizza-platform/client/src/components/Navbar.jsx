@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./Navbar.css";
 
-function Navbar({ cartCount = 0 }) {
+function Navbar({ cartCount = 0, onCartClick }) {
   const [activeTab, setActiveTab] = useState("delivery");
 
   const navItems = [
@@ -48,9 +48,10 @@ function Navbar({ cartCount = 0 }) {
             type="button"
             className="cart-btn"
             aria-label="Shopping cart"
+            onClick={onCartClick}
           >
             🛒
-            <span className="cart-badge">0</span>
+            <span className="cart-badge">{cartCount}</span>
           </button>
         </div>
       </div>
