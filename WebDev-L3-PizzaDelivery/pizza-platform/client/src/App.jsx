@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import PizzaCard from "./components/PizzaCard";
 import pizzas from "./data/pizza.js";
@@ -8,8 +8,20 @@ function App() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [selectedPizza, setSelectedPizza] = useState(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   const categories = ["All", "Classic", "Vegetarian", "Special"];
+
+  // Auto-advance hero carousel every 4 seconds
+  useEffect(() => {
+    if (!pizzas || pizzas.length === 0) return;
+
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % pizzas.length);
+    }, 4000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   // Memoize filtered results for better rendering performance
   const filteredPizzas = useMemo(() => {
@@ -31,11 +43,11 @@ function App() {
         {/* Hero Section */}
         <section className="hero">
           <div className="hero-content">
-            <span className="hero-tag">YOUR PIZZA DESTINATION</span>
+            <span className="hero-tag">YOUR PIZZA PALACE</span>
             <h1>
-              Good food.
+              Cheezy Slice
               <br />
-              <span>Good mood.</span>
+              <span>Cheeky Smiles</span>
             </h1>
             <p>
               Discover your favourite pizzas or create something completely your
@@ -46,9 +58,36 @@ function App() {
             </a>
           </div>
 
-          <div className="hero-image" aria-hidden="true">
-            <span>🍕</span>
-            <p>Delicious Pizzas</p>
+          {/* Carousel Right Side */}
+          <div className="hero-carousel" aria-label="Featured pizzas carousel">
+            <div
+              className="carousel-track"
+              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+            >
+              {pizzas.map((pizza) => (
+                <div className="carousel-slide" key={pizza.id}>
+                  <img
+                    src={pizza.image}
+                    alt={pizza.name}
+                    className="carousel-img"
+                  />
+                  <span className="carousel-pizza-name">{pizza.name}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Carousel Dots Indicator */}
+            <div className="carousel-dots">
+              {pizzas.map((pizza, index) => (
+                <button
+                  key={pizza.id}
+                  type="button"
+                  className={`dot ${currentSlide === index ? "active" : ""}`}
+                  onClick={() => setCurrentSlide(index)}
+                  aria-label={`Show ${pizza.name}`}
+                />
+              ))}
+            </div>
           </div>
         </section>
 
@@ -65,7 +104,6 @@ function App() {
           <div className="menu-controls">
             {/* Search */}
             <div className="search-container" role="search">
-              <span aria-hidden="true">🔍</span>
               <input
                 type="text"
                 placeholder="Search for your favourite pizza..."
@@ -147,9 +185,9 @@ function App() {
       {/* Footer */}
       <footer className="footer" id="contact">
         <div className="footer-content">
-          <h3>PizzAche</h3>
+          <h3>pizzaAche</h3>
           <p>Good pizza. Great moments.</p>
-          <span>© 2026 PizzAche. All rights reserved.</span>
+          <span>© 2026 pizzaAche. All rights reserved.</span>
         </div>
       </footer>
     </div>

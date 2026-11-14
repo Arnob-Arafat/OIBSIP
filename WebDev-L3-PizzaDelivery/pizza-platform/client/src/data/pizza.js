@@ -14,6 +14,14 @@ const pizzas = [
     price: 550,
     category: "Classic",
     image: "/images/peperoni.jpg"
+  },
+  {
+    id: 3,
+    name: "Four Season",
+    description: "Flavor bomb of four types of pizza",
+    price: "600",
+    category: "Special",
+    image: "/images/fourseason.webp"
   }
 ];
 
