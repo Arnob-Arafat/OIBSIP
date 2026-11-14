@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./Navbar.css";
 
-function Navbar() {
+function Navbar({ cartCount = 0 }) {
   const [activeTab, setActiveTab] = useState("delivery");
 
   const navItems = [

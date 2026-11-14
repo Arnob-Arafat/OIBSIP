@@ -1,0 +1,256 @@
+
+.builder-section {
+  width: 100%;
+  padding: 55px 7%;
+  background: #fff8fb;
+  color: #343b40;
+}
+
+.builder-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 35px;
+}
+
+.builder-label {
+  color: #e91e78;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.builder-header h2 {
+  font-size: 32px;
+  margin: 10px 0;
+}
+
+.builder-header p,
+.builder-group > p {
+  color: #777;
+  font-size: 14px;
+}
+
+.builder-close {
+  border: none;
+  background: #fff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.builder-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 35px;
+  align-items: start;
+}
+
+.builder-options {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.builder-group {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  padding: 25px;
+}
+
+.builder-group h3 {
+  font-size: 19px;
+  margin-bottom: 7px;
+}
+
+.builder-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.builder-choice {
+  min-height: 58px;
+  padding: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  background: white;
+  color: #343b40;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.builder-choice strong {
+  white-space: nowrap;
+  color: #555;
+}
+
+.builder-choice:hover {
+  border-color: #e91e78;
+}
+
+.builder-choice.selected {
+  background: #fff0f6;
+  border: 2px solid #e91e78;
+  color: #c81463;
+}
+
+.vegetable-choice {
+  cursor: pointer;
+}
+
+.vegetable-choice input {
+  accent-color: #e91e78;
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+}
+
+.builder-summary {
+  position: sticky;
+  top: 20px;
+  padding: 25px;
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 16px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+}
+
+.summary-image {
+  height: 140px;
+  display: grid;
+  place-items: center;
+  background: #fff0f6;
+  border-radius: 12px;
+  font-size: 75px;
+  margin-bottom: 20px;
+}
+
+.builder-summary h3 {
+  font-size: 21px;
+}
+
+.summary-subtitle {
+  color: #888;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.summary-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 22px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.summary-details div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.summary-details span,
+.quantity-control > span {
+  color: #888;
+  font-size: 12px;
+}
+
+.summary-details strong {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+.quantity-control div {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.quantity-control button {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.quantity-control button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #eee;
+  padding: 20px 0;
+}
+
+.summary-total strong {
+  font-size: 24px;
+  color: #e91e78;
+}
+
+.add-custom-pizza-btn {
+  width: 100%;
+  padding: 15px;
+  background: #e91e78;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.add-custom-pizza-btn:hover {
+  background: #c81463;
+}
+
+@media (max-width: 900px) {
+  .builder-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .builder-summary {
+    position: static;
+  }
+}
+
+@media (max-width: 550px) {
+  .builder-section {
+    padding: 35px 5%;
+  }
+
+  .builder-header h2 {
+    font-size: 25px;
+  }
+
+  .builder-group {
+    padding: 18px;
+  }
+
+  .builder-choice-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -2,12 +2,14 @@ import { useState, useMemo, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import PizzaCard from "./components/PizzaCard";
 import pizzas from "./data/pizza.js";
+import CustomPizzaBuilder from "./components/CustomPizzaBuilder";
 import "./App.css";
 
 function App() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
-  const [selectedPizza, setSelectedPizza] = useState(null);
+  const [showBuilder, setShowBuilder] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const categories = ["All", "Classic", "Vegetarian", "Special"];
@@ -37,7 +39,7 @@ function App() {
 
   return (
     <div className="app-container">
-      <Navbar />
+      <Navbar cartCount={cartItems.length} />
 
       <main>
         {/* Hero Section */}
@@ -58,39 +60,57 @@ function App() {
             </a>
           </div>
 
-          {/* Carousel Right Side */}
-          <div className="hero-carousel" aria-label="Featured pizzas carousel">
-            <div
-              className="carousel-track"
-              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-            >
-              {pizzas.map((pizza) => (
-                <div className="carousel-slide" key={pizza.id}>
-                  <img
-                    src={pizza.image}
-                    alt={pizza.name}
-                    className="carousel-img"
+          {/* Right Column: Carousel + Build Your Own Pizza Button Stacked */}
+          <div className="hero-right">
+            <div className="hero-carousel" aria-label="Featured pizzas carousel">
+              <div
+                className="carousel-track"
+                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              >
+                {pizzas.map((pizza) => (
+                  <div className="carousel-slide" key={pizza.id}>
+                    <img
+                      src={pizza.image}
+                      alt={pizza.name}
+                      className="carousel-img"
+                    />
+                    <span className="carousel-pizza-name">{pizza.name}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Carousel Dots Indicator */}
+              <div className="carousel-dots">
+                {pizzas.map((pizza, index) => (
+                  <button
+                    key={pizza.id}
+                    type="button"
+                    className={`dot ${currentSlide === index ? "active" : ""}`}
+                    onClick={() => setCurrentSlide(index)}
+                    aria-label={`Show ${pizza.name}`}
                   />
-                  <span className="carousel-pizza-name">{pizza.name}</span>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
 
-            {/* Carousel Dots Indicator */}
-            <div className="carousel-dots">
-              {pizzas.map((pizza, index) => (
-                <button
-                  key={pizza.id}
-                  type="button"
-                  className={`dot ${currentSlide === index ? "active" : ""}`}
-                  onClick={() => setCurrentSlide(index)}
-                  aria-label={`Show ${pizza.name}`}
-                />
-              ))}
-            </div>
+            <button
+              type="button"
+              className="custom-builder-cta"
+              onClick={() => setShowBuilder(true)}
+            >
+              + Build Your Own Pizza
+            </button>
           </div>
         </section>
-
+        
+        {showBuilder && (
+          <CustomPizzaBuilder
+            onClose={() => setShowBuilder(false)}
+            onAddToCart={(pizza) => {
+              setCartItems((previous) => [...previous, pizza]);
+            }}
+          />
+        )}
         {/* Menu Section */}
         <section className="menu-section" id="menu">
           <div className="section-heading">
@@ -147,7 +167,6 @@ function App() {
                 <PizzaCard
                   key={pizza.id}
                   pizza={pizza}
-                  onCustomize={setSelectedPizza}
                 />
               ))
             ) : (
@@ -163,23 +182,6 @@ function App() {
           </div>
         </section>
 
-        {/* Customization Selection Feedback Modal / Banner */}
-        {selectedPizza && (
-          <aside className="selection-message" role="alert">
-            <div className="selection-info">
-              <strong>{selectedPizza.name} selected!</strong>
-              <p>Your custom pizza builder will be connected here.</p>
-            </div>
-            <button
-              type="button"
-              onClick={() => setSelectedPizza(null)}
-              aria-label="Dismiss selection"
-              className="close-banner-btn"
-            >
-              ✕
-            </button>
-          </aside>
-        )}
       </main>
 
       {/* Footer */}

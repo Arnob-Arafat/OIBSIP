@@ -87,9 +87,18 @@ a {
   overflow: hidden;
 }
 
+/* HERO RIGHT CONTAINER (Carousel + Button Stacked) */
+.hero-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
 .hero-carousel {
   width: 340px;
-  height: 280px;
+  height: 250px;
   position: relative;
   overflow: hidden;
   border-radius: 16px;
@@ -99,7 +108,40 @@ a {
   justify-content: center;
   background: rgba(255, 255, 255, 0.4);
   border: 1.5px dashed rgba(215, 15, 100, 0.2);
-  flex-shrink: 0;
+}
+
+/* Build Your Own Pizza Button */
+.custom-builder-cta {
+  width: 100%;
+  padding: 12px 20px;
+  background: #e91e78;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: 0.2s;
+  box-shadow: 0 4px 12px rgba(233, 30, 120, 0.25);
+}
+
+.custom-builder-cta:hover {
+  background: #c81463;
+  transform: translateY(-2px);
+}
+
+/* Responsive adjustment */
+@media (max-width: 768px) {
+  .hero-right {
+    width: 100%;
+    margin-top: 24px;
+  }
+  
+  .hero-carousel {
+    width: 100%;
+    height: 200px;
+  }
 }
 
 .carousel-track {
