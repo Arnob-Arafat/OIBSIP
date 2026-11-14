@@ -42,17 +42,33 @@ function App() {
 
   // Add a predefined pizza
 function addRegularPizza(pizza) {
-  const cartItem = {
-    cartItemId: `${pizza.id}-${Date.now()}`,
-    type: "regular",
-    name: pizza.name,
-    unitPrice: Number(pizza.price),
-    quantity: 1,
-  };
+  setCartItems((previous) => {
+    const existingItem = previous.find(
+      (item) =>
+        item.type === "regular" && item.name === pizza.name
+    );
 
-  setCartItems((previous) => [...previous, cartItem]);
+    if (existingItem) {
+      return previous.map((item) =>
+        item.cartItemId === existingItem.cartItemId
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+    }
 
-  setShowCart(true); // Automatically open cart
+    return [
+      ...previous,
+      {
+        cartItemId: `regular-${pizza.id}`,
+        type: "regular",
+        name: pizza.name,
+        unitPrice: Number(pizza.price),
+        quantity: 1,
+      },
+    ];
+  });
+
+  setShowCart(true);
 }
 
 // Add a custom pizza
